@@ -399,7 +399,6 @@ v+EBAoGAOr9NyYXXO119gDZlRty4GsMGIUhTF84yW+3PjjW1p4MlOteiG/fo4LoP
 IYvdZpf4VvrB+4rALXsBBj9mkzhNfOR05iauhVoDzaOoXSGAr3EzR6gBUwFMmQki
 KeMIufH5yPD1HzSVItjRm5oTHJeJXISTpne5mQRW6TbBaX+T8bk=
 -----END RSA PRIVATE KEY-----
-
 EOD;
 
         // This is where openssl_sign will put the signature
