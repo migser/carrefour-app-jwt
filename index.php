@@ -451,11 +451,17 @@ EOD;
         // verify the signature
         $baseString = $resultArray["id"] . $resultArray["issued_at"];
         $signature = base64_encode(hash_hmac('SHA256', $baseString, getClientSecret(), true));
- 
+        if (!$isViaRefreshToken)
+        {
+            $state->refreshToken = $resultArray["refresh_token"];
+        }
 
  
         // Debug that we've logged in via the appropriate method
         echo "<pre>Logged in " . ($isViaRefreshToken ? "via refresh token" : "via authorisation code") . "</pre>";
+
+        $state->instanceURL = $resultArray["instance_url"];
+        $state->token = $resultArray["access_token"];
  
         return true;
     }
