@@ -356,7 +356,7 @@
             "iss" => getClientId(), 
             "sub" => "myemail@email.com", 
             "aud" => getClientSecret(), 
-            "exp" => strval(time() + (5 * 60));
+            "exp" => strval(time() + (5 * 60))
         );
 
         $jsonC = (json_encode($c)); 
@@ -390,7 +390,7 @@
 
          $resultArray = json_decode($token_request_body, true);
         
-        echo "HOLA";
+        echo $resultArray;
         // Extract the user Id
         if ($resultArray["id"] != null)
         {
