@@ -354,7 +354,7 @@
         //Create JSon Claim/Payload
         $c = array(
             "iss" => getClientId(), 
-            "sub" => "admin@carrefour-identity.demo", 
+            "sub" => "juanperez.salesforce2@gmail.com", 
             "aud" => getClientSecret(), 
             "exp" => strval(time() + (5 * 60))
         );
