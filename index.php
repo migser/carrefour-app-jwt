@@ -452,13 +452,7 @@ EOD;
         $baseString = $resultArray["id"] . $resultArray["issued_at"];
         $signature = base64_encode(hash_hmac('SHA256', $baseString, getClientSecret(), true));
  
-        if ($signature != $resultArray["signature"])
-        {
-            $state->error = 'Invalid Signature';
-            $state->errorDescription = 'Failed to verify OAUTH signature.';
- 
-            return false;
-        }
+
  
         // Debug that we've logged in via the appropriate method
         echo "<pre>Logged in " . ($isViaRefreshToken ? "via refresh token" : "via authorisation code") . "</pre>";
