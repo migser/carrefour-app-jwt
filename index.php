@@ -1,5 +1,6 @@
 <?php
     // Report all errors (ignore Notices)
+    // https://sdodemo-main-15b0fc33c9c.force.com/Carrefour/services/oauth2/authorize?client_id=3MVG9i1HRpGLXp.rWT8Mzhvq8DKCXYYhpZFtVygLxLKO73NSup_szrPEBXgYnSpVBfN.NVcNmV1e4dfhATTrt&redirect_uri=https://carrefour-app-jwt.herokuapp.com/index.php&response_type=code
     error_reporting(E_ALL & ~E_NOTICE);
     ini_set('display_errors', 1);
     session_start();
@@ -267,13 +268,11 @@
         //        "&code_challenge=" . $state->generateCodeChallenge() .
         //        "&state=" . $state->serializeStateString();
         //
-        $href = "https://sdodemo-main-15b0fc33c9c.force.com/Carrefour/services/oauth2/authorize?response_type=code" . 
+        https://sdodemo-main-15b0fc33c9c.force.com/Carrefour/services/oauth2/authorize?client_id=3MVG9i1HRpGLXp.rWT8Mzhvq8DKCXYYhpZFtVygLxLKO73NSup_szrPEBXgYnSpVBfN.NVcNmV1e4dfhATTrt&redirect_uri=https://carrefour-app-jwt.herokuapp.com/index.php&response_type=code
+        $href = 
+                "https://sdodemo-main-15b0fc33c9c.force.com/Carrefour/services/oauth2/authorize?response_type=code" . 
                 "&client_id=" . getClientId() . 
-                "&redirect_uri=" . getCallBackURL() . 
-                "&scope=api refresh_token" . 
-                "&prompt=consent" . 
-                "&code_challenge=" . $state->generateCodeChallenge() .
-                "&state=" . $state->serializeStateString();
+                "&redirect_uri=" . getCallBackURL();
         // Wipe out arbitary state values to demonstrate passing additional state to salesforce and back
         $state->passthroughState1 = NULL;
         $state->passthroughState2 = NULL;
