@@ -355,7 +355,7 @@
         $c = array(
             "iss" => getClientId(), 
             "sub" => "juanperez.salesforce2@gmail.com", 
-            "aud" => getClientSecret(), 
+            "aud" => "https://sdodemo-main-15b0fc33c9c.force.com/Carrefour" //getClientSecret(), 
             "exp" => strval(time() + (5 * 60))
         );
 
@@ -373,7 +373,7 @@
 // FILE PERMISSIONS!
     $private_key = <<<EOD
 -----BEGIN RSA PRIVATE KEY-----
-XIIEogIBAAKCAQEAk4yAWNTENCsLfpkmZk7kbY7BW9yixjtuPq5BExe+A7YIWdNU
+MIIEogIBAAKCAQEAk4yAWNTENCsLfpkmZk7kbY7BW9yixjtuPq5BExe+A7YIWdNU
 EQo6cgPSckx3JhgJlQEnL9daw52XW+vOKv5UpcqYSqUaWMJ47AQJs/kmcDEnDmQr
 HxkIIJLgZf8GQ7t+IuLE9h56ShHgSQT8Uhj6Mp5TD/AVxskFWYfJ0tRoYlnFOQcg
 0EKdUJ0POOmS+d3U6I7PWksO1kWx/tTZvYoW6q0PdDBx8ERVZiVXpCsL/S5iWC73
