@@ -363,9 +363,46 @@
         $payload = base64_encode($jsonC);
 
         //Sign the resulting string using SHA256 with RSA
-        $s = hash_hmac('sha256', $header.'.'.$payload, getClientSecret());
-        $secret = base64_encode($s);
+        //$s = hash_hmac('sha256', $header.'.'.$payload, getClientSecret());
+        //$secret = base64_encode($s);
 
+        //########################
+
+
+// LOAD YOUR PRIVATE KEY FROM A FILE - BE CAREFUL TO PROTECT IT USING
+// FILE PERMISSIONS!
+$private_key = <<<EOD
+-----BEGIN RSA PRIVATE KEY-----
+MIICXgIBAAKBgQDykHJs4OuuTMSfubPm5OhZS9T53eEL107heKimGYiebHnANXGZ
+n1KXq7NaPNlSnQp6PNsXsEeqFMLq5W5NvkWRexpNzRj2AVzG8vDQfB2E5x+I0nvu
+S2O53E+hYubI4Br83C28nIHmi014VEWSuH/WFOwVGPGqRqv5UPSyI7n6kQIDAQAB
+AoGBAKpuk/eskeyGRCF2edFiRV94yMxH+jg3sFT8UoNirXui/GjxJECskXvASOS+
+nHRPo20AFXEviysWK16glkBJ0NZpPxeJf6ETxvKEdhKc8FG44Ct669CknSKgESJp
+jU0zQAiRPqzSHO9rdh/R5yAfUTI/J16oxJag1mQKBgZVxFOBAkEA/1//AmWdhqy3
+SlRStOsn23nCfmicj3xAuX9RokW1Vcgv398PCppaX7MyIblpXosgtDRhgquM/rIE
+RaJ12GOyxwJBAPMobKGni5tggRikMNGtNjY+kVdTejRETCR7neF0HmOlMTnSKGgL
+HolTaCHJQmZQDVkacutK68tfgwHWJblmD+cCQD/guj/WPR33y+06xGlevNyIS18l
+Oawmb2Y286t8dkxbw6Xi/LcxPtPbVfnbkADHGkoZJB70XFNFIg5tAb87yPcCQQCh
+GyGOodHv6qreRrtJ0XffzOjDcT3Ar5e7fGQI4sTXxLWu172J4gQjfK275Psnitat
+OMb3erZsEyZb6yUnh6X1AkEAoYeDr91Wm0vt6G3/Tr3TIA4S983LMVEOuvyUW3bz
+Dazud7dxEZxedR6DhwHnUP6KoOwNOoSzOtYr6SU4ArN+fw==
+-----END RSA PRIVATE KEY-----
+EOD;
+
+// This is where openssl_sign will put the signature
+$s = "";
+
+// SHA256 in this context is actually RSA with SHA256
+$algo = "SHA256";
+
+// Sign the header and payload
+openssl_sign($header.'.'.$payload, $s, $private_key, $algo);
+
+// Base64 encode the result
+$secret = base64_encode($s);
+
+
+//#############################
 
         $token = $header . '.' . $payload . '.' . $secret;
 
