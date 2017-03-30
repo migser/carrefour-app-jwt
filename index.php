@@ -371,38 +371,51 @@
 
 // LOAD YOUR PRIVATE KEY FROM A FILE - BE CAREFUL TO PROTECT IT USING
 // FILE PERMISSIONS!
-$private_key = <<<EOD
+    $private_key = <<<EOD
 -----BEGIN RSA PRIVATE KEY-----
-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
+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
 -----END RSA PRIVATE KEY-----
+
 EOD;
 
-// This is where openssl_sign will put the signature
-$s = "";
+        // This is where openssl_sign will put the signature
+        $s = "";
 
-// SHA256 in this context is actually RSA with SHA256
-$algo = "SHA256";
+        // SHA256 in this context is actually RSA with SHA256
+        $algo = "SHA256";
 
-// Sign the header and payload
-openssl_sign($header.'.'.$payload, $s, $private_key, $algo);
+        // Sign the header and payload
+        openssl_sign($header.'.'.$payload, $s, $private_key, $algo);
 
-// Base64 encode the result
-$secret = base64_encode($s);
+        // Base64 encode the result
+        $secret = base64_encode($s);
 
 
-//#############################
+        //#############################
 
         $token = $header . '.' . $payload . '.' . $secret;
 
