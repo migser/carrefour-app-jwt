@@ -355,7 +355,7 @@
         $c = array(
             "iss" => getClientId(), 
             "sub" => "juanperez.salesforce2@gmail.com", 
-            "aud" => "https://sdodemo-main-15b0fc33c9c.force.com/Carrefour" //getClientSecret(), 
+            "aud" => "https://sdodemo-main-15b0fc33c9c.force.com/Carrefour", //getClientSecret(), 
             "exp" => strval(time() + (5 * 60))
         );
 
