@@ -238,9 +238,9 @@
 ?>
                 <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
                     <input type="submit" name="reset" value="Reset" />
-                    <input type="submit" name="authenticate" value="Authenticate" />
-                    <input type="submit" name="login_via_code" value="Login via Authentication Code" />
-                    <input type="submit" name="login_via_refresh_token" value="Login via Refresh Token" />
+                   <!-- <input type="submit" name="authenticate" value="Authenticate" /> -->
+                    <input type="submit" name="login_via_code" value="Login via JWT Code" />
+                   <!-- <input type="submit" name="login_via_refresh_token" value="Login via Refresh Token" />-->
                     <input type="submit" name="get_user" value="Get User" />
                 </form>
  
@@ -252,21 +252,21 @@
     /**
      * Redirect page to Salesforce to authenticate
      */
-    function doOAUTH()
+ /*   function doOAUTH()
     {
         $state = $_SESSION['state'];
  
         // Set the Authentication URL
         // Note we pass in the code challenge
         //Cambiando HREF para Communitites:
-        /*$href = "https://login.salesforce.com/services/oauth2/authorize?response_type=code" . 
-                "&client_id=" . getClientId() . 
-                "&redirect_uri=" . getCallBackURL() . 
-                "&scope=api refresh_token" . 
-                "&prompt=consent" . 
-                "&code_challenge=" . $state->generateCodeChallenge() .
-                "&state=" . $state->serializeStateString();
-        */
+        //$href = "https://login.salesforce.com/services/oauth2/authorize?response_type=code" . 
+        //        "&client_id=" . getClientId() . 
+        //        "&redirect_uri=" . getCallBackURL() . 
+        //        "&scope=api refresh_token" . 
+        //        "&prompt=consent" . 
+        //        "&code_challenge=" . $state->generateCodeChallenge() .
+        //        "&state=" . $state->serializeStateString();
+        //
         $href = "https://sdodemo-main-15b0fc33c9c.force.com/Carrefour/services/oauth2/authorize?response_type=code" . 
                 "&client_id=" . getClientId() . 
                 "&redirect_uri=" . getCallBackURL() . 
@@ -281,6 +281,7 @@
         // Perform the redirect
         header("location: $href");
     }
+*/
  
     /**
      * Login via an Authentication Code
@@ -291,13 +292,13 @@
  
         // Create the Field array to pass to the post request
         // Note we pass in the code verifier and the authentication code
-        $fields = array('grant_type' => 'authorization_code', 
-                        'client_id' => getClientId(),
-                        'client_secret' => getClientSecret(),
-                        'redirect_uri' => getCallBackURL(),
-                        'code_verifier' => $state->generateCodeVerifier(),
-                        'code' => $state->code,
-                        );
+        //$fields = array('grant_type' => 'authorization_code', 
+        //                'client_id' => getClientId(),
+        //                'client_secret' => getClientSecret(),
+        //                'redirect_uri' => getCallBackURL(),
+        //                'code_verifier' => $state->generateCodeVerifier(),
+        //                'code' => $state->code,
+        //                );
          
         // perform the login to Salesforce
         return doLogin($fields, false);
@@ -306,7 +307,7 @@
     /**
      * Login via a Refresh Token
      */
-    function loginViaRefreshToken()
+  /*  function loginViaRefreshToken()
     {
         $state = $_SESSION['state'];
  
@@ -322,7 +323,7 @@
         // perform the login to Salesforce
         return doLogin($fields, true);
     }
- 
+ */
     /**
      * Login to Salesforce to get a Session Token using CURL
      */
@@ -338,53 +339,56 @@
         $headerOpts = array('Content-type: application/x-www-form-urlencoded');
  
         // Create the params for the POST request from the supplied fields  
-        $params = "";
-         
-        foreach($fields as $key=>$value) 
-        { 
-            $params .= $key . '=' . $value . '&';
-        }
- 
-        $params = rtrim($params, '&');
- 
-        // Open the connection
+       define('LOGIN_BASE_URL', 'https://sdodemo-main-15b0fc33c9c.force.com/Carrefour');
+    /**
+     * Añadido para la autenticación con JWT
+     */
+        //Json Header
+        $h = array(
+            "alg" => "RS256"    
+        );
+
+        $jsonH = json_encode(($h)); 
+        $header = base64_encode($jsonH); 
+
+        //Create JSon Claim/Payload
+        $c = array(
+            "iss" => getClientId(), 
+            "sub" => "myemail@email.com", 
+            "aud" => getClientSecret(), 
+            "exp" => "1333685628"
+        );
+
+        $jsonC = (json_encode($c)); 
+        $payload = base64_encode($jsonC);
+
+        //Sign the resulting string using SHA256 with RSA
+        $s = hash_hmac('sha256', $header.'.'.$payload, getClientSecret());
+        $secret = base64_encode($s);
+
+
+        $token = $header . '.' . $payload . '.' . $secret;
+
+        $token_url = LOGIN_BASE_URL.'/services/oauth2/token';
+
+        $post_fields = array(
+            'grant_type' => 'urn:ietf:params:oauth:grant-type:jwt-bearer',
+            'assertion' => $token
+        );
+
         $ch = curl_init();
- 
-        // Set the url, number of POST vars, POST data etc
-        curl_setopt($ch, CURLOPT_URL, $postURL);
-        curl_setopt($ch, CURLOPT_POST, count($fields));
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headerOpts);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
- 
-        // Execute POST
-        $result = curl_exec($ch);
- 
-        // Close the connection
-        curl_close($ch);
- 
-        //record the results into state
-        $typeString = gettype($result);
-        $resultArray = json_decode($result, true);
- 
-        $state->error = $resultArray["error"];
-        $state->errorDescription = $resultArray["error_description"];
- 
-        // If there are any errors return false
-        if ($state->error != null)
-        {
-            return false;
-        }
- 
-        $state->instanceURL = $resultArray["instance_url"];
-        $state->token = $resultArray["access_token"];
- 
-        // If we are logging in via an Authentication Code, we want to store the 
-        // resulting Refresh Token
-        if (!$isViaRefreshToken)
-        {
-            $state->refreshToken = $resultArray["refresh_token"];
-        }
+        curl_setopt($ch, CURLOPT_URL, $token_url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
+        curl_setopt($ch, CURLOPT_POST, TRUE);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $post_fields);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+
+// Make the API call, and then extract the information from the response
+    $token_request_body = curl_exec($ch) 
+        or die("Call to get token from code failed: '$token_url' - ".print_r($post_fields, true));
+
+         $resultArray = json_decode($token_request_body, true);
  
         // Extract the user Id
         if ($resultArray["id"] != null)
@@ -471,7 +475,7 @@
      */
     function getClientId()
     {
-        return "3MVG9i1HRpGLXp.rWT8Mzhvq8DPPrrDVfbDfNeOfylYhSkSl7BnWGhIYjxcJ40XOK4ZB56K5KRsiLq.BgEA2o";
+        return "3MVG9i1HRpGLXp.rWT8Mzhvq8DKCXYYhpZFtVygLxLKO73NSup_szrPEBXgYnSpVBfN.NVcNmV1e4dfhATTrt";
     }
  
     /**
@@ -479,7 +483,7 @@
      */
     function getClientSecret()
     {
-        return "6953965681299147457";
+        return "560008810877349762";
     }
  
     /**
