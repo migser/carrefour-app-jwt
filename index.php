@@ -349,7 +349,7 @@
         );
 
         $jsonH = json_encode(($h)); 
-        $header = base64_encode($jsonH); 
+        $header = rtrim(strtr(base64_encode($jsonH), '+/', '-_'), '=');  //base64_encode($jsonH); 
 
         //Create JSon Claim/Payload
         $c = array(
@@ -358,9 +358,10 @@
             "aud" => "https://sdodemo-main-15b0fc33c9c.force.com/Carrefour", //getClientSecret(), 
             "exp" => strval(time() + (5 * 60))
         );
+        echo $token_request_body;
 
         $jsonC = (json_encode($c)); 
-        $payload = base64_encode($jsonC);
+        $payload = rtrim(strtr(base64_encode($jsonC), '+/', '-_'), '='); //base64_encode($jsonC);
 
         //Sign the resulting string using SHA256 with RSA
         //$s = hash_hmac('sha256', $header.'.'.$payload, getClientSecret());
@@ -411,7 +412,7 @@ EOD;
         openssl_sign($header.'.'.$payload, $s, $private_key, $algo);
 
         // Base64 encode the result
-        $secret = base64_encode($s);
+        $secret = rtrim(strtr(base64_encode($s), '+/', '-_'), '='); //base64_encode($s);
 
 
         //#############################
