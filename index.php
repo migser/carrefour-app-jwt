@@ -238,7 +238,7 @@
 ?>
                 <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
                     <input type="submit" name="reset" value="Reset" />
-                   <!-- <input type="submit" name="authenticate" value="Authenticate" /> -->
+                    <input type="submit" name="authenticate" value="Authenticate" /> 
                     <input type="submit" name="login_via_code" value="Login via JWT Code" />
                    <!-- <input type="submit" name="login_via_refresh_token" value="Login via Refresh Token" />-->
                     <input type="submit" name="get_user" value="Get User" />
@@ -252,7 +252,7 @@
     /**
      * Redirect page to Salesforce to authenticate
      */
- /*   function doOAUTH()
+    function doOAUTH()
     {
         $state = $_SESSION['state'];
  
@@ -281,7 +281,7 @@
         // Perform the redirect
         header("location: $href");
     }
-*/
+
  
     /**
      * Login via an Authentication Code
