@@ -356,7 +356,7 @@
             "iss" => getClientId(), 
             "sub" => "myemail@email.com", 
             "aud" => getClientSecret(), 
-            "exp" => "1333685628"
+            "exp" => strval(time() + (5 * 60));
         );
 
         $jsonC = (json_encode($c)); 
