@@ -390,7 +390,7 @@
 
          $resultArray = json_decode($token_request_body, true);
         
-        echo $resultArray;
+        echo "HOLA";
         // Extract the user Id
         if ($resultArray["id"] != null)
         {
