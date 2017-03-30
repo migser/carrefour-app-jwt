@@ -389,7 +389,8 @@
         or die("Call to get token from code failed: '$token_url' - ".print_r($post_fields, true));
 
          $resultArray = json_decode($token_request_body, true);
- 
+        
+        echo $resultArray
         // Extract the user Id
         if ($resultArray["id"] != null)
         {
