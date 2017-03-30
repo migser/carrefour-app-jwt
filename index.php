@@ -418,7 +418,7 @@ EOD;
 
         $token = $header . '.' . $payload . '.' . $secret;
 
-        $token_url = LOGIN_BASE_URL.'/services/oauth2/token';
+        $token_url = 'XXX'.LOGIN_BASE_URL.'/services/oauth2/token';
 
         $post_fields = array(
             'grant_type' => 'urn:ietf:params:oauth:grant-type:jwt-bearer',
@@ -526,6 +526,7 @@ EOD;
     function getClientId()
     {
         return "3MVG9i1HRpGLXp.rWT8Mzhvq8DKCXYYhpZFtVygLxLKO73NSup_szrPEBXgYnSpVBfN.NVcNmV1e4dfhATTrt";
+
     }
  
     /**
